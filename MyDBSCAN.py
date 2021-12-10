@@ -11,6 +11,8 @@ class CMyDBSCAN:
         self.minPoints = _minPoints
         self.eps = _eps
         self.currnetCluster = -1
+        #distnaces data structures
+        self.distances = [np.zeros(n) for n in range(_size,0,-1)]
         
     def startClustering(self, dataSet):
         for pIndex in range(len(dataSet)):
@@ -45,7 +47,7 @@ class CMyDBSCAN:
     def rangeQuery(self,data, qIndex):
         neighborsList = []
         for pIndex in range(len(data)):
-            if self.calcEuclideanDistance(data, qIndex, pIndex) <= self.eps:
+            if (qIndex == pIndex) or (self.calcEuclideanDistance(data, qIndex, pIndex) <= self.eps):
                 neighborsList.append(pIndex)     
         return neighborsList
     

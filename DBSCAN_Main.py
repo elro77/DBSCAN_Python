@@ -29,17 +29,18 @@ with open("data.txt",'r') as f:
 elapsed = time.time() - t
 print("creating data time: ",elapsed)
 
-
+testArray = vectorsArray[0:500]
 #====== Sklearn =================
 #the sklearn clustering takes 120 seconds to accomplish
 #return an array where each index is the vector(point) and value is it clustering
 #where -1 will represnt as a noise
-"""
+
 t = time.time()
 clustering = DBSCAN(eps=3, min_samples=2).fit(vectorsArray)
+labels = clustering.labels_
 elapsed = time.time() - t
 print("optimal clustering time: ",elapsed)
-"""
+
 #=================================
 
 
@@ -51,6 +52,14 @@ elapsed = time.time() - t
 print("my clustering time: ",elapsed)
 
 #=================================
+
+
+#check correctness
+for i in range(len(labels)):
+    if labels[i] != clusteringResult[i]:
+        print("different at: ",i)
+print("finish testing")
+
 
 
 #testing area
