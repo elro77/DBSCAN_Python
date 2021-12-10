@@ -19,7 +19,11 @@ elapsed = time.time() - t
 print(elapsed)
 ###
 """
-
+"""
+    Version 1.00
+    for 2000 points -> optimal clustering 0.093 seconds
+                       My clustering 521 seconds
+"""
 
 # this is a fast approach, it takes 4.5 seconds for reading and creating the whole dataset
 # its work 223 times faster
@@ -59,6 +63,7 @@ for i in range(len(labels)):
     if labels[i] != clusteringResult[i]:
         print("different at: ",i)
 print("finish testing")
+
 
 
 
