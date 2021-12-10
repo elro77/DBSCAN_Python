@@ -29,18 +29,18 @@ print(elapsed)
 # its work 223 times faster
 t = time.time()
 with open("data.txt",'r') as f:
-    vectorsArray = np.array([[float (i) for i in line.split(',')] for line in f.readlines()])
+    vectorsArray = [[float (i) for i in line.split(',')] for line in f.readlines()]
 elapsed = time.time() - t
 print("creating data time: ",elapsed)
 
-testArray = vectorsArray[0:500]
+testArray = vectorsArray[6000:6500]
 #====== Sklearn =================
 #the sklearn clustering takes 120 seconds to accomplish
 #return an array where each index is the vector(point) and value is it clustering
 #where -1 will represnt as a noise
 
 t = time.time()
-clustering = DBSCAN(eps=3, min_samples=2).fit(vectorsArray)
+clustering = DBSCAN(eps=3, min_samples=2).fit(testArray)
 labels = clustering.labels_
 elapsed = time.time() - t
 print("optimal clustering time: ",elapsed)
@@ -50,21 +50,21 @@ print("optimal clustering time: ",elapsed)
 
 #============ my implementation =============
 t = time.time()
-dbscan = CMyDBSCAN(len(vectorsArray), 3, 2)
-clusteringResult = dbscan.startClustering(vectorsArray)
+dbscan = CMyDBSCAN(len(testArray), 3, 2)
+clusteringResult = dbscan.startClustering(testArray)
 elapsed = time.time() - t
 print("my clustering time: ",elapsed)
 
 #=================================
 
-
+"""
 #check correctness
 for i in range(len(labels)):
     if labels[i] != clusteringResult[i]:
         print("different at: ",i)
 print("finish testing")
 
-
+"""
 
 
 #testing area

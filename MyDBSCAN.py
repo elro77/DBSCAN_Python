@@ -11,13 +11,19 @@ class CMyDBSCAN:
         self.minPoints = _minPoints
         self.eps = _eps
         self.currnetCluster = -1
-        #distnaces data structures
-        self.distances = [np.zeros(n) for n in range(_size,0,-1)]
+        #connections
+        self.connectionsDictionary = dict()
+        self.gridDictionary = dict()
+        
+        
         
     def startClustering(self, dataSet):
+        self.createGraph(dataSet)
+        """
         for pIndex in range(len(dataSet)):
             if(self.undefinedPoints[pIndex] == False):
                 continue
+            self.connectionsDictionary.update(pIndex,[])
             neighbors = self.rangeQuery(dataSet, pIndex)
             if len(neighbors) < self.minPoints:
                 self.noisePoints[pIndex] = True
@@ -41,6 +47,7 @@ class CMyDBSCAN:
                 if len(qNeighbors) >= self.minPoints:
                     seedSet.extend(qNeighbors)
                     seedSet.remove(qIndex) #removing a neighbor which was already called
+        """
    
         return self.clusters
     
@@ -59,10 +66,25 @@ class CMyDBSCAN:
         p2 = data[pIndex]
         for i in range(len(p1)):
             sm += (p1[i]-p2[i]) * (p1[i]-p2[i])
-        return math.sqrt(sm)
+        return sm
+    
+    def createGraph(self,data):
+        pointsArray = [[int(i) for i in l] for l in data]
+        for pIndex in range(len(data)):
+            avg = int(sum(value for value in data[pIndex])/len(data[pIndex]))
+            if not (avg in  self.gridDictionary):
+                self.gridDictionary.update({avg : []})   
+            self.gridDictionary[avg].append(pIndex)
+            
+            
+    
+                
+    
+    
     
     
 
 
 
     
+
