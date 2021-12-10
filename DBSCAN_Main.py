@@ -2,6 +2,7 @@ import numpy as np
 import time
 
 from sklearn.cluster import DBSCAN
+from MyDBSCAN import CMyDBSCAN
 
 """
 # this is very slow approach, it takes 10 seconds for 100 data
@@ -34,10 +35,14 @@ print("creating data time: ",elapsed)
 t = time.time()
 clustering = DBSCAN(eps=3, min_samples=2).fit(vectorsArray)
 elapsed = time.time() - t
-print("clustering time: ",elapsed)
+print("optimal clustering time: ",elapsed)
 """
 #my implementation
-
+t = time.time()
+dbscan = CMyDBSCAN(len(vectorsArray), 3, 2)
+clusteringResult = dbscan.startClustering(vectorsArray)
+elapsed = time.time() - t
+print("my clustering time: ",elapsed)
 
 
 
