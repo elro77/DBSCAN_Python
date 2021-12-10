@@ -1,5 +1,6 @@
 import numpy as np
 import time
+import math
 
 from sklearn.cluster import DBSCAN
 from MyDBSCAN import CMyDBSCAN
@@ -28,6 +29,8 @@ with open("data.txt",'r') as f:
 elapsed = time.time() - t
 print("creating data time: ",elapsed)
 
+
+#====== Sklearn =================
 #the sklearn clustering takes 120 seconds to accomplish
 #return an array where each index is the vector(point) and value is it clustering
 #where -1 will represnt as a noise
@@ -37,16 +40,18 @@ clustering = DBSCAN(eps=3, min_samples=2).fit(vectorsArray)
 elapsed = time.time() - t
 print("optimal clustering time: ",elapsed)
 """
-#my implementation
+#=================================
+
+
+#============ my implementation =============
 t = time.time()
 dbscan = CMyDBSCAN(len(vectorsArray), 3, 2)
 clusteringResult = dbscan.startClustering(vectorsArray)
 elapsed = time.time() - t
 print("my clustering time: ",elapsed)
 
+#=================================
 
 
-
-
-
+#testing area
 
