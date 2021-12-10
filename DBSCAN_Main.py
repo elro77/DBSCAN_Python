@@ -17,6 +17,8 @@ elapsed = time.time() - t
 print(elapsed)
 ###
 """
+
+
 # this is a fast approach, it takes 4.5 seconds for reading and creating the whole dataset
 # its work 223 times faster
 t = time.time()
@@ -25,7 +27,7 @@ with open("data.txt",'r') as f:
 elapsed = time.time() - t
 print("creating data time: ",elapsed)
 
-
+"""
 #the sklearn clustering takes 117 seconds to accomplish
 t = time.time()
 clustering = DBSCAN(eps=3, min_samples=2).fit(vectorsArray)
@@ -33,5 +35,12 @@ elapsed = time.time() - t
 print("clustering time: ",elapsed)
 
 #my implementation
+
+"""
+
+
+
+
+
 
 
