@@ -1,6 +1,8 @@
 import numpy as np
 import time
 
+from sklearn.cluster import DBSCAN
+
 """
 # this is very slow approach, it takes 10 seconds for 100 data
 t = time.time()
@@ -15,11 +17,21 @@ elapsed = time.time() - t
 print(elapsed)
 ###
 """
-# this is a fast approach, it takes 3.8 seconds for reading and creating the whole dataset
-# its work 2631 times faster
+# this is a fast approach, it takes 4.5 seconds for reading and creating the whole dataset
+# its work 223 times faster
 t = time.time()
 with open("data.txt",'r') as f:
-    vectorsList = [[float (i) for i in line.split(',')] for line in f.readlines()]
+    vectorsArray = np.array([[float (i) for i in line.split(',')] for line in f.readlines()])
 elapsed = time.time() - t
-print(elapsed)
+print("creating data time: ",elapsed)
+
+
+#the sklearn clustering takes 117 seconds to accomplish
+t = time.time()
+clustering = DBSCAN(eps=3, min_samples=2).fit(vectorsArray)
+elapsed = time.time() - t
+print("clustering time: ",elapsed)
+
+#my implementation
+
 
