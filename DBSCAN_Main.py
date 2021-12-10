@@ -27,16 +27,17 @@ with open("data.txt",'r') as f:
 elapsed = time.time() - t
 print("creating data time: ",elapsed)
 
+#the sklearn clustering takes 120 seconds to accomplish
+#return an array where each index is the vector(point) and value is it clustering
+#where -1 will represnt as a noise
 """
-#the sklearn clustering takes 117 seconds to accomplish
 t = time.time()
 clustering = DBSCAN(eps=3, min_samples=2).fit(vectorsArray)
 elapsed = time.time() - t
 print("clustering time: ",elapsed)
-
+"""
 #my implementation
 
-"""
 
 
 

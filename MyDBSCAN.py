@@ -16,5 +16,5 @@ def calcEuclideanDistance(p1 ,p2):
     sm = 0
     for i in range(len(p1)):
         sm = sm + (p1[i]-p2[i]) * (p1[i]-p2[i])
-    return sm
+    return math.sqrt(sm)
     
