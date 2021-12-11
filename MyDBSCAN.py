@@ -1,5 +1,6 @@
 import numpy as np
 import math
+import time
 
 class CMyDBSCAN:
     def __init__(self, _size, _eps ,_minPoints):
@@ -18,12 +19,18 @@ class CMyDBSCAN:
         
         
     def startClustering(self, dataSet):
+        t = time.time()
         self.createGraph(dataSet)
-        """
+        elapsed = time.time() - t
+        print("creating graph time: ",elapsed)
+        
+        t = time.time()
         for pIndex in range(len(dataSet)):
+            if(pIndex in self.connectionsDictionary) == False:
+                continue
             if(self.undefinedPoints[pIndex] == False):
                 continue
-            self.connectionsDictionary.update(pIndex,[])
+    
             neighbors = self.rangeQuery(dataSet, pIndex)
             if len(neighbors) < self.minPoints:
                 self.noisePoints[pIndex] = True
@@ -47,16 +54,18 @@ class CMyDBSCAN:
                 if len(qNeighbors) >= self.minPoints:
                     seedSet.extend(qNeighbors)
                     seedSet.remove(qIndex) #removing a neighbor which was already called
-        """
-   
+        elapsed = time.time() - t
+        print("DBSCAN run time: ",elapsed)
         return self.clusters
     
     def rangeQuery(self,data, qIndex):
+        """
         neighborsList = []
         for pIndex in range(len(data)):
             if (qIndex == pIndex) or (self.calcEuclideanDistance(data, qIndex, pIndex) <= self.eps):
-                neighborsList.append(pIndex)     
-        return neighborsList
+                neighborsList.append(pIndex)   
+        """
+        return self.connectionsDictionary[qIndex]
     
     
 
@@ -69,8 +78,10 @@ class CMyDBSCAN:
         return math.sqrt(sm)
     
     def createGraph(self,data):
+        #create data set that find nearest neighbors
         self.initGridDictionary(data)
-        #self.initGraph(data)
+        #create a graph of connection with eps distances
+        self.initGraph(data)
         
     def initGridDictionary(self, data):
         #here we must run through all points and  connect them via map with O(n) only!
@@ -83,6 +94,27 @@ class CMyDBSCAN:
                 if (key in  self.gridDictionary) == False:
                     self.gridDictionary.update({key : []})   
                 self.gridDictionary[key].append(pIndex)
+                
+                
+    def initGraph(self, data):
+        for key in self.gridDictionary:
+            for pIndex in range(len(self.gridDictionary[key])):
+                for qIndex in range(pIndex + 1, len(self.gridDictionary[key])):
+                    p = self.gridDictionary[key][pIndex]
+                    q = self.gridDictionary[key][qIndex]
+                    if p in self.connectionsDictionary:
+                        if q in self.connectionsDictionary[p]:
+                            continue
+                    if self.calcEuclideanDistance(data, self.gridDictionary[key][pIndex], self.gridDictionary[key][qIndex]) <= self.eps:
+                        
+                        if (p in self.connectionsDictionary) == False:
+                            self.connectionsDictionary.update({p : [p]})
+                        if (q in self.connectionsDictionary) == False:
+                            self.connectionsDictionary.update({q : [q]})
+                            
+                        self.connectionsDictionary[p].append(q)
+                        self.connectionsDictionary[q].append(p)
+                        
             
                              
 
