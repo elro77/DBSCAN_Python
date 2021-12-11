@@ -66,15 +66,33 @@ class CMyDBSCAN:
         p2 = data[pIndex]
         for i in range(len(p1)):
             sm += (p1[i]-p2[i]) * (p1[i]-p2[i])
-        return sm
+        return math.sqrt(sm)
     
     def createGraph(self,data):
+        self.initGridDictionary(data)
+        #self.initGraph(data)
+        
+    def initGridDictionary(self, data):
+        #here we must run through all points and  connect them via map with O(n) only!
         pointsArray = [[int(i) for i in l] for l in data]
         for pIndex in range(len(data)):
             avg = int(sum(value for value in data[pIndex])/len(data[pIndex]))
-            if not (avg in  self.gridDictionary):
-                self.gridDictionary.update({avg : []})   
-            self.gridDictionary[avg].append(pIndex)
+            for key in range(avg - self.eps, avg + self.eps):
+                if key < 0:
+                    continue
+                if (key in  self.gridDictionary) == False:
+                    self.gridDictionary.update({key : []})   
+                self.gridDictionary[key].append(pIndex)
+            
+                             
+
+                          
+                     
+                
+        
+            
+            
+
             
             
     
@@ -87,4 +105,5 @@ class CMyDBSCAN:
 
 
     
+
 
