@@ -15,6 +15,8 @@ class CMyDBSCAN:
         #connections
         self.connectionsDictionary = dict()
         self.gridDictionary = dict()
+        #distancematrix
+        #self.distMatrix = np.zeros((_size, _size), dtype = bool) #problomatic
         
         
         
@@ -71,11 +73,13 @@ class CMyDBSCAN:
 
     def calcEuclideanDistance(self,data, qIndex ,pIndex):
         sm = 0
+        if(qIndex == pIndex):
+            return 0
         p1 = data[qIndex]
-        p2 = data[pIndex]
-        for i in range(len(p1)):
-            sm += (p1[i]-p2[i]) * (p1[i]-p2[i])
-        return math.sqrt(sm)
+        p2 = data[pIndex]  
+        temp = p1 - p2
+        sm = np.dot(temp.T, temp) ** 0.5
+        return sm
     
     def createGraph(self,data):
         #create data set that find nearest neighbors

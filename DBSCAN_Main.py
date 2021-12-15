@@ -5,6 +5,7 @@ import math
 from sklearn.cluster import DBSCAN
 from MyDBSCAN import CMyDBSCAN
 
+
 """
 # this is very slow approach, it takes 10 seconds for 100 data
 t = time.time()
@@ -20,17 +21,30 @@ print(elapsed)
 ###
 """
 """
-    == Version 1.00
+    == Version 1.00, pure DBSCAN without any improvment
     for 2000 points -> optimal clustering 0.093 seconds
                        My clustering 521 seconds
                         Version 1.00
                         
-    == Version 1.01                  
+    == Version 1.01, using a tile grid that will hold similliar vectors behavior and dictinaory to connect graph                   
     for 3000 points -> optimal clustering 0.287 seconds
                        My clustering 88 seconds
                        
     for 5000 points -> optimal clustering 0.605 seconds
-                      My clustering 88 seconds
+                      My clustering 240 seconds
+                      
+                      
+      == Version 1.02, improving the euqlidian distance function with np.array            
+    for 3000 points -> optimal clustering 0.287 seconds
+                       My clustering 16.4 seconds
+                       
+    for 5000 points -> optimal clustering 0.605 seconds
+                      My clustering 44 seconds
+                      
+    for 10,000 points -> optimal clustering 2.72 seconds
+                         My clustering 178 seconds                  
+                      
+                      
                       
 """
 
@@ -38,9 +52,11 @@ print(elapsed)
 # its work 223 times faster
 t = time.time()
 with open("data.txt",'r') as f:
-    vectorsArray = [[float (i) for i in line.split(',')] for line in f.readlines()]
+    vectorsArray = np.array([[float (i) for i in line.split(',')] for line in f.readlines()])
 elapsed = time.time() - t
 print("creating data time: ",elapsed)
+
+
 
 testArray = vectorsArray[5000:10000]
 #====== Sklearn =================
@@ -60,6 +76,8 @@ print("optimal clustering time: ",elapsed)
 #============ my implementation =============
 t = time.time()
 dbscan = CMyDBSCAN(len(testArray), 3, 2)
+elapsed = time.time() - t
+print("creation: ",elapsed)
 clusteringResult = dbscan.startClustering(testArray)
 elapsed = time.time() - t
 print("my clustering time: ",elapsed)
