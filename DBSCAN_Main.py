@@ -34,7 +34,7 @@ print(elapsed)
                       My clustering 240 seconds
                       
                       
-      == Version 1.02, improving the euqlidian distance function with np.array            
+    == Version 1.02, improving the euqlidian distance function with np.array operations         
     for 3000 points -> optimal clustering 0.287 seconds
                        My clustering 16.4 seconds
                        
@@ -45,15 +45,17 @@ print(elapsed)
                          My clustering 178 seconds
                          
                          
-     == Version 1.03,         
+    == Version 1.03,         
     for 3000 points -> optimal clustering 0.287 seconds
-                       My clustering 16.4 seconds
+                       My clustering 1.87 seconds
                        
     for 5000 points -> optimal clustering 0.605 seconds
-                      My clustering 44 seconds
+                      My clustering 5.2 seconds
                       
     for 10,000 points -> optimal clustering 2.72 seconds
-                         My clustering 178 seconds  
+                         My clustering 19.83 seconds
+    for 50,000 points -> optimal clustering 32.14 seconds
+                         My clustering very long time seconds  
                       
 """
 
@@ -67,7 +69,7 @@ print("creating data time: ",elapsed)
 
 
 
-testArray = vectorsArray[5000:10000]
+testArray = vectorsArray[0:50000]
 #====== Sklearn =================
 #the sklearn clustering takes 120 seconds to accomplish
 #return an array where each index is the vector(point) and value is it clustering
@@ -85,7 +87,7 @@ print("optimal clustering time: ",elapsed)
 #============ my implementation =============
 t = time.time()
 dbscan = CMyDBSCAN(len(testArray), 3, 2)
-clusteringResult = dbscan.startClustering(testArray)
+myClusteringResult = dbscan.startClustering(testArray)
 elapsed = time.time() - t
 print("my clustering time: ",elapsed)
 
@@ -93,7 +95,7 @@ print("my clustering time: ",elapsed)
 
 #check correctness
 for i in range(len(labels)):
-    if labels[i] != clusteringResult[i]:
+    if labels[i] != myClusteringResult[i]:
         print("different at: ",i)
 print("finish testing")
 
