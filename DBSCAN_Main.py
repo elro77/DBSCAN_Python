@@ -45,7 +45,7 @@ print(elapsed)
                          My clustering 178 seconds
                          
                          
-    == Version 1.03,         
+    == Version 1.03, using Dan's euclidean distance, saving the vectors for each grid group  
     for 3000 points -> optimal clustering 0.287 seconds
                        My clustering 1.87 seconds
                        
@@ -56,6 +56,18 @@ print(elapsed)
                          My clustering 19.83 seconds
     for 50,000 points -> optimal clustering 32.14 seconds
                          My clustering very long time seconds  
+                         
+                         
+    == Version 1.04, decreasing number pf iterations using group union                               
+    for 5000 points -> optimal clustering 0.605 seconds
+                      My clustering 0.93 seconds
+                      
+    for 10,000 points -> optimal clustering 2.72 seconds
+                         My clustering 3.57 seconds
+    for 50,000 points -> optimal clustering 32.14 seconds
+                         My clustering 90.86 time seconds 
+                         
+    
                       
 """
 
@@ -69,7 +81,7 @@ print("creating data time: ",elapsed)
 
 
 
-testArray = vectorsArray[5000:10000]
+testArray = vectorsArray[0:50000]
 #====== Sklearn =================
 #the sklearn clustering takes 120 seconds to accomplish
 #return an array where each index is the vector(point) and value is it clustering

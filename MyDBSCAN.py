@@ -129,13 +129,12 @@ class CMyDBSCAN:
                    self.gridDictionaryIndexes.update({currentKey : []})   
             self.gridDictionaryVectors[currentKey].append(data[pIndex])
             self.gridDictionaryIndexes[currentKey].append(pIndex)
-        t = time.time()
+        #t = time.time()
         self.zipGrid()
-        elapsed = time.time() - t
-        print("zip grid time: ",elapsed)
+        #elapsed = time.time() - t
+        #print("zip grid time: ",elapsed)
                
         
-                
                 
     def initGraph(self, data):
         cnt = 0
@@ -145,6 +144,7 @@ class CMyDBSCAN:
             result = self.dist(np.array(self.gridDictionaryVectors[key]))
             elapsed = time.time() - t
             print("dist calc : ",elapsed)
+            t = time.time()
             for pIndex in  range(len(self.gridDictionaryIndexes[key])):
                 for qIndex in  range(pIndex, len(self.gridDictionaryIndexes[key])):
                     if result[pIndex, qIndex] <= self.eps:
