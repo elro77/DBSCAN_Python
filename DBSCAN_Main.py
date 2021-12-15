@@ -5,6 +5,33 @@ import math
 from sklearn.cluster import DBSCAN
 from MyDBSCAN import CMyDBSCAN
 
+
+"""
+    == Version 1.00, pure DBSCAN
+    for 2000 points -> optimal clustering 0.093 seconds
+                       My clustering 521 seconds
+                        Version 1.00
+                        
+    == Version 1.01, using grid of intergers values              
+    for 3000 points -> optimal clustering 0.287 seconds
+                       My clustering 88 seconds
+                       
+    for 5000 points -> optimal clustering 0.605 seconds
+                      My clustering 240 seconds
+                      
+                      
+    == Version 1.02, using ballTree for creating a graph
+    for 3000 points -> optimal clustering 0.287 seconds
+                       My clustering X seconds
+                       
+    for 5000 points -> optimal clustering 0.605 seconds
+                      My clustering Y seconds
+                      
+"""
+
+
+
+#====== Pulling data from file =================
 """
 # this is very slow approach, it takes 10 seconds for 100 data
 t = time.time()
@@ -19,21 +46,6 @@ elapsed = time.time() - t
 print(elapsed)
 ###
 """
-"""
-    == Version 1.00
-    for 2000 points -> optimal clustering 0.093 seconds
-                       My clustering 521 seconds
-                        Version 1.00
-                        
-    == Version 1.01                  
-    for 3000 points -> optimal clustering 0.287 seconds
-                       My clustering 88 seconds
-                       
-    for 5000 points -> optimal clustering 0.605 seconds
-                      My clustering 88 seconds
-                      
-"""
-
 # this is a fast approach, it takes 4.5 seconds for reading and creating the whole dataset
 # its work 223 times faster
 t = time.time()
@@ -43,6 +55,8 @@ elapsed = time.time() - t
 print("creating data time: ",elapsed)
 
 testArray = vectorsArray[5000:10000]
+#=================================
+
 #====== Sklearn =================
 #the sklearn clustering takes 120 seconds to accomplish
 #return an array where each index is the vector(point) and value is it clustering

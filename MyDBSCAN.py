@@ -1,6 +1,7 @@
 import numpy as np
 import math
 import time
+from BallTree import CBallTree
 
 class CMyDBSCAN:
     def __init__(self, _size, _eps ,_minPoints):
@@ -84,36 +85,15 @@ class CMyDBSCAN:
         self.initGraph(data)
         
     def initGridDictionary(self, data):
-        #here we must run through all points and  connect them via map with O(n) only!
-        pointsArray = [[int(i) for i in l] for l in data]
-        for pIndex in range(len(data)):
-            avg = int(sum(value for value in data[pIndex])/len(data[pIndex]))
-            for key in range(avg - self.eps, avg + self.eps):
-                if key < 0:
-                    continue
-                if (key in  self.gridDictionary) == False:
-                    self.gridDictionary.update({key : []})   
-                self.gridDictionary[key].append(pIndex)
+        #here we will create a Balltree
+        ballTree = CBallTree()
+        ballTree.constructTree(data)
+  
                 
                 
     def initGraph(self, data):
-        for key in self.gridDictionary:
-            for pIndex in range(len(self.gridDictionary[key])):
-                for qIndex in range(pIndex + 1, len(self.gridDictionary[key])):
-                    p = self.gridDictionary[key][pIndex]
-                    q = self.gridDictionary[key][qIndex]
-                    if p in self.connectionsDictionary:
-                        if q in self.connectionsDictionary[p]:
-                            continue
-                    if self.calcEuclideanDistance(data, self.gridDictionary[key][pIndex], self.gridDictionary[key][qIndex]) <= self.eps:
-                        
-                        if (p in self.connectionsDictionary) == False:
-                            self.connectionsDictionary.update({p : [p]})
-                        if (q in self.connectionsDictionary) == False:
-                            self.connectionsDictionary.update({q : [q]})
-                            
-                        self.connectionsDictionary[p].append(q)
-                        self.connectionsDictionary[q].append(p)
+        #here we will run through the ball tree and create our graph
+        x=0
                         
             
                              
