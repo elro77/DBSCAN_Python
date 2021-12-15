@@ -16,6 +16,7 @@ class CMyDBSCAN:
         self.clusters = [-1] * _size
         self.noisePoints = [False] * _size
         self.undefinedPoints = [True] * _size
+        self.actualKeys = set()
         #integers
         self.minPoints = _minPoints
         self.eps = _eps
@@ -102,26 +103,48 @@ class CMyDBSCAN:
         elapsed = time.time() - t
         print("initGraph time: ",elapsed)
         
+
+    def zipGrid(self):
+         for currentKey in self.actualKeys:
+             for key in range(currentKey - self.eps, currentKey - self.eps):
+                 if(key < 0) or (currentKey == key):
+                     continue
+                 if(key in self.actualKeys) == False:
+                     continue
+                 self.gridDictionaryVectors[currentKey] += self.gridDictionaryVectors[key]
+                 self.gridDictionaryIndexes[currentKey] += self.gridDictionaryIndexes[key]
+                 
+                 self.gridDictionaryVectors[key] += self.gridDictionaryVectors[currentKey]
+                 self.gridDictionaryIndexes[key] += self.gridDictionaryIndexes[currentKey]
+        
+        
     def initgridDictionaryVectors(self, data):
         #here we must run through all points and  connect them via map with O(n) only!
         dimentions = len(data[0])
         for pIndex in range(len(data)):
-            avg = int(np.sum(data[pIndex])/dimentions)
-            for key in range(avg - self.eps, avg + self.eps):
-                if key < 0:
-                    continue
-                if (key in  self.gridDictionaryVectors) == False:
-                    self.gridDictionaryVectors.update({key : []})   
-                    self.gridDictionaryIndexes.update({key : []})   
-                self.gridDictionaryVectors[key].append(data[pIndex])
-                self.gridDictionaryIndexes[key].append(pIndex)
+            currentKey = int(np.sum(data[pIndex])/dimentions)   
+            self.actualKeys.add(currentKey)
+            if (currentKey in  self.gridDictionaryVectors) == False:
+                   self.gridDictionaryVectors.update({currentKey : []})   
+                   self.gridDictionaryIndexes.update({currentKey : []})   
+            self.gridDictionaryVectors[currentKey].append(data[pIndex])
+            self.gridDictionaryIndexes[currentKey].append(pIndex)
+        t = time.time()
+        self.zipGrid()
+        elapsed = time.time() - t
+        print("zip grid time: ",elapsed)
+               
+        
                 
                 
     def initGraph(self, data):
-        for key in self.gridDictionaryVectors:
-           #print("start key: ",key)
-            #t = time.time()
+        cnt = 0
+        for key in self.actualKeys:
+            cnt+=1
+            t = time.time()
             result = self.dist(np.array(self.gridDictionaryVectors[key]))
+            elapsed = time.time() - t
+            print("dist calc : ",elapsed)
             for pIndex in  range(len(self.gridDictionaryIndexes[key])):
                 for qIndex in  range(pIndex, len(self.gridDictionaryIndexes[key])):
                     if result[pIndex, qIndex] <= self.eps:
@@ -132,13 +155,11 @@ class CMyDBSCAN:
                         self.connectionsDictionary[realPIndex].add(realQIndex)
                         if (realQIndex in self.connectionsDictionary) == False:
                             self.connectionsDictionary.update({realQIndex : set()})
-                        self.connectionsDictionary[realQIndex].add(realPIndex)
-                
-            
-                        
-            #elapsed = time.time() - t
-           # print("time passed for key" ,key, ": ",elapsed)
-
+                        self.connectionsDictionary[realQIndex].add(realPIndex)             
+            elapsed = time.time() - t
+            print("time passed for key" ,key, ": ",elapsed)
+        print("iterations = ",cnt)
+ 
                         
             
      
