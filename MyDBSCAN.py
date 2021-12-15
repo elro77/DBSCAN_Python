@@ -2,6 +2,14 @@ import numpy as np
 import math
 import time
 
+"""
+t = time.time()
+elapsed = time.time() - t
+print("creating graph time: ",elapsed)
+"""
+
+
+
 class CMyDBSCAN:
     def __init__(self, _size, _eps ,_minPoints):
         #arrays
@@ -21,11 +29,7 @@ class CMyDBSCAN:
         
         
     def startClustering(self, dataSet):
-        t = time.time()
         self.createGraph(dataSet)
-        elapsed = time.time() - t
-        print("creating graph time: ",elapsed)
-        
         t = time.time()
         for pIndex in range(len(dataSet)):
             if(pIndex in self.connectionsDictionary) == False:
@@ -102,6 +106,8 @@ class CMyDBSCAN:
                 
     def initGraph(self, data):
         for key in self.gridDictionary:
+            print("start key: ",key)
+            t = time.time()
             for pIndex in range(len(self.gridDictionary[key])):
                 for qIndex in range(pIndex + 1, len(self.gridDictionary[key])):
                     p = self.gridDictionary[key][pIndex]
@@ -118,6 +124,9 @@ class CMyDBSCAN:
                             
                         self.connectionsDictionary[p].append(q)
                         self.connectionsDictionary[q].append(p)
+            elapsed = time.time() - t
+            print("time passed for key" ,key, ": ",elapsed)
+
                         
             
                              

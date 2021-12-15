@@ -42,9 +42,18 @@ print(elapsed)
                       My clustering 44 seconds
                       
     for 10,000 points -> optimal clustering 2.72 seconds
-                         My clustering 178 seconds                  
+                         My clustering 178 seconds
+                         
+                         
+     == Version 1.03,         
+    for 3000 points -> optimal clustering 0.287 seconds
+                       My clustering 16.4 seconds
+                       
+    for 5000 points -> optimal clustering 0.605 seconds
+                      My clustering 44 seconds
                       
-                      
+    for 10,000 points -> optimal clustering 2.72 seconds
+                         My clustering 178 seconds  
                       
 """
 
@@ -76,8 +85,6 @@ print("optimal clustering time: ",elapsed)
 #============ my implementation =============
 t = time.time()
 dbscan = CMyDBSCAN(len(testArray), 3, 2)
-elapsed = time.time() - t
-print("creation: ",elapsed)
 clusteringResult = dbscan.startClustering(testArray)
 elapsed = time.time() - t
 print("my clustering time: ",elapsed)
