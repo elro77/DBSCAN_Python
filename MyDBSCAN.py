@@ -133,32 +133,45 @@ class CMyDBSCAN:
         self.zipGrid()
         #elapsed = time.time() - t
         #print("zip grid time: ",elapsed)
+        
+    def connectNodes(self, key, pIndex, qIndex):
+        realPIndex = self.gridDictionaryIndexes[key][pIndex]
+        realQIndex = self.gridDictionaryIndexes[key][qIndex]
+        if (realPIndex in self.connectionsDictionary) == False:
+            self.connectionsDictionary.update({realPIndex : set()})
+        self.connectionsDictionary[realPIndex].add(realQIndex)
+        if (realQIndex in self.connectionsDictionary) == False:
+            self.connectionsDictionary.update({realQIndex : set()})
+        self.connectionsDictionary[realQIndex].add(realPIndex) 
                
         
                 
     def initGraph(self, data):
         cnt = 0
         for key in self.actualKeys:
-            cnt+=1
-            t = time.time()
+            #cnt+=1
+            #print("#",cnt)
+            #t = time.time()
             result = self.dist(np.array(self.gridDictionaryVectors[key]))
-            elapsed = time.time() - t
-            print("dist calc : ",elapsed)
+            #elapsed = time.time() - t
+            #print("dist calc : ",elapsed)
+            
             t = time.time()
-            for pIndex in  range(len(self.gridDictionaryIndexes[key])):
-                for qIndex in  range(pIndex, len(self.gridDictionaryIndexes[key])):
-                    if result[pIndex, qIndex] <= self.eps:
-                        realPIndex = self.gridDictionaryIndexes[key][pIndex]
-                        realQIndex = self.gridDictionaryIndexes[key][qIndex]
-                        if (realPIndex in self.connectionsDictionary) == False:
-                            self.connectionsDictionary.update({realPIndex : set()})
-                        self.connectionsDictionary[realPIndex].add(realQIndex)
-                        if (realQIndex in self.connectionsDictionary) == False:
-                            self.connectionsDictionary.update({realQIndex : set()})
-                        self.connectionsDictionary[realQIndex].add(realPIndex)             
-            elapsed = time.time() - t
-            print("time passed for key" ,key, ": ",elapsed)
-        print("iterations = ",cnt)
+            mat = result < self.eps
+            pIndex = -1
+            for row in mat:
+                pIndex += 1
+                trueAmounts = np.sum(row)
+                if trueAmounts >= self.minPoints:
+                    for colom in range(len(row)):
+                        if row[colom] == True:
+                            self.connectNodes(key, pIndex, colom)
+                    
+            #elapsed = time.time() - t
+            #print("time passed for key" ,key, ": ",elapsed)
+
+    
+        #print("iterations = ",cnt)
  
                         
             

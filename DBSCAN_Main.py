@@ -67,6 +67,31 @@ print(elapsed)
     for 50,000 points -> optimal clustering 32.14 seconds
                          My clustering 90.86 time seconds 
                          
+                         
+                         
+    == Version 1.04, decreasing number pf iterations using group union                               
+    for 5000 points -> optimal clustering 0.605 seconds
+                      My clustering 0.93 seconds
+                      
+    for 10,000 points -> optimal clustering 2.72 seconds
+                         My clustering 3.57 seconds
+    for 50,000 points -> optimal clustering 32.14 seconds
+                         My clustering 90.86 time seconds 
+                         
+                         
+     == Version 1.05, improving search by using a matrix and np.sum() for detecting 
+                      how many points are connected to each other with eps distance
+    for 5000 points -> optimal clustering 0.605 seconds
+                      My clustering 0.198 seconds
+                      
+    for 10,000 points -> optimal clustering 2.72 seconds
+                         My clustering 0.791 seconds
+    for 50,000 points -> optimal clustering 32.14 seconds
+                         My clustering 25.33 time seconds 
+                         
+   for 100,000 points -> optimal clustering 120 seconds
+                         My clustering 135.77 time seconds 
+                         
     
                       
 """
@@ -81,7 +106,7 @@ print("creating data time: ",elapsed)
 
 
 
-testArray = vectorsArray[0:50000]
+testArray = vectorsArray[0:100000]
 #====== Sklearn =================
 #the sklearn clustering takes 120 seconds to accomplish
 #return an array where each index is the vector(point) and value is it clustering
@@ -105,12 +130,13 @@ print("my clustering time: ",elapsed)
 
 #=================================
 
+"""
 #check correctness
 for i in range(len(labels)):
     if labels[i] != myClusteringResult[i]:
         print("different at: ",i)
 print("finish testing")
-
+"""
 
 #testing area
 
