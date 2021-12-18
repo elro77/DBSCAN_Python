@@ -145,36 +145,30 @@ class CMyDBSCAN:
                 
     def initGraph(self, data):
         cnt = 0
-        cRow = 0
         for key in self.actualKeys:
-            cnt+=1
-            print("#",cnt)
-            t = time.time()
+            #cnt+=1
+            #print("#",cnt)
+            #t = time.time()
             result = self.dist(np.array(self.gridDictionaryVectors[key]))
-            elapsed = time.time() - t
-            print("dist calc : ",elapsed)
+            #elapsed = time.time() - t
+            #print("dist calc : ",elapsed)
             
             t = time.time()
             mat = result < self.eps
             pIndex = -1
             for row in mat:
-                cRow += 1
-                t__ = time.time()
                 pIndex += 1
                 trueAmounts = np.sum(row)
                 if trueAmounts >= self.minPoints:
-                    #try to modify here
                     for colom in range(len(row)):
                         if row[colom] == True:
                             self.connectNodes(key, pIndex, colom)
-                elapsed = time.time() - t__
-                print("time passed for row #" ,cRow, ": ",elapsed)
-
-            elapsed = time.time() - t
-            print("time passed for key" ,key, ": ",elapsed)
+                    
+            #elapsed = time.time() - t
+            #print("time passed for key" ,key, ": ",elapsed)
 
     
-        print("iterations = ",cnt)
+        #print("iterations = ",cnt)
  
                         
             
