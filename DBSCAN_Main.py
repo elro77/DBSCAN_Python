@@ -82,6 +82,14 @@ print(elapsed)
    for 100,000 points -> optimal clustering 120 seconds
                          My clustering 135.77 time seconds 
                          
+                         
+    == Version 1.06, implementing silhouette, after using and eps 4 the run time was very slow so it 
+                     must be faster
+                     
+                     
+    ==Version 1.07, the time was decreased from serval minutes to 1.5 minutes tops with the use of
+                    np.sum on matrix and np.where to decrease for loop on checking True values
+                         
     
                       
 """
@@ -96,14 +104,14 @@ print("creating data time: ",elapsed)
 
 
 
-testArray = vectorsArray[0:50000]
+testArray = vectorsArray[0:100000]
 #====== Sklearn =================
 #the sklearn clustering takes 120 seconds to accomplish
 #return an array where each index is the vector(point) and value is it clustering
 #where -1 will represnt as a noise
 
 t = time.time()
-clustering = DBSCAN(eps=4, min_samples=2).fit(testArray)
+clustering = DBSCAN(eps=6, min_samples=2).fit(testArray)
 labels = clustering.labels_
 elapsed = time.time() - t
 print("optimal clustering time: ",elapsed)
@@ -114,18 +122,21 @@ print("optimal clustering time: ",elapsed)
 
 #============ my implementation =============
 t = time.time()
-dbscan = CMyDBSCAN(len(testArray), 4, 2)
+dbscan = CMyDBSCAN(len(testArray), 6, 2)
 myClusteringResult = dbscan.startClustering(testArray)
 elapsed = time.time() - t
 print("my clustering time: ",elapsed)
 
-silhouette = Silhouette()
 
+
+
+"""
+silhouette = Silhouette()
 t = time.time()
 silhouetteValue = silhouette.calculateSilhouetteValue(testArray, np.array(myClusteringResult))
 elapsed = time.time() - t
 print("calculateSilhouetteValue time: ",elapsed)
-
+"""
 
 #=================================
 

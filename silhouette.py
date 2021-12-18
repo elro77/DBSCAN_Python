@@ -16,6 +16,9 @@ print("creating graph time: ",elapsed)
     for 10,000 points -> running at 0.015 seconds    
     for 50,000 points -> running at 2.77 seconds                            
     for 100,000 points -> runnin at 30.6 seconds
+    for eps higher than 4 it breaks
+    
+    
 """
 
 
@@ -108,6 +111,7 @@ class Silhouette:
         for index in self.clustersDictionaryIndexes[clusterNumber]:
             sumDist += self.distances[firstIndex, index]
             
+        #sumDist = self.distances.sum(axis = 1)[firstIndex]
         return sumDist / (numberOfMembers - 1)
         
         

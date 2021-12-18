@@ -131,15 +131,16 @@ class CMyDBSCAN:
         #elapsed = time.time() - t
         #print("zip grid time: ",elapsed)
         
-    def connectNodes(self, key, pIndex, qIndex):
+    def connectNodes(self, key, pIndex, arrayIndexes):
         realPIndex = self.gridDictionaryIndexes[key][pIndex]
-        realQIndex = self.gridDictionaryIndexes[key][qIndex]
         if (realPIndex in self.connectionsDictionary) == False:
-            self.connectionsDictionary.update({realPIndex : set()})
-        self.connectionsDictionary[realPIndex].add(realQIndex)
-        if (realQIndex in self.connectionsDictionary) == False:
-            self.connectionsDictionary.update({realQIndex : set()})
-        self.connectionsDictionary[realQIndex].add(realPIndex) 
+                self.connectionsDictionary.update({realPIndex : set()})
+        for qIndex in arrayIndexes:
+            realQIndex = self.gridDictionaryIndexes[key][qIndex]
+            if (realQIndex in self.connectionsDictionary) == False:
+                self.connectionsDictionary.update({realQIndex : set()})
+            self.connectionsDictionary[realPIndex].add(realQIndex)
+            self.connectionsDictionary[realQIndex].add(realPIndex) 
                
         
                 
@@ -147,34 +148,47 @@ class CMyDBSCAN:
         cnt = 0
         cRow = 0
         for key in self.actualKeys:
-            cnt+=1
-            print("#",cnt)
-            t = time.time()
+            #cnt+=1
+            #print("#",cnt)
+            #t = time.time()
             result = self.dist(np.array(self.gridDictionaryVectors[key]))
-            elapsed = time.time() - t
-            print("dist calc : ",elapsed)
+            #elapsed = time.time() - t
+            #print("dist calc : ",elapsed)
             
-            t = time.time()
+            #t = time.time()
             mat = result < self.eps
+            arrayOfTrueAmounts = np.sum(mat,axis=1)
+            arrayCheck = arrayOfTrueAmounts >= self.minPoints
+            arrayValid = np.where(arrayCheck)[0]
+            
             pIndex = -1
-            for row in mat:
+            for row in arrayValid:
                 cRow += 1
-                t__ = time.time()
+                #t__ = time.time()
                 pIndex += 1
                 trueAmounts = np.sum(row)
                 if trueAmounts >= self.minPoints:
                     #try to modify here
+                    """
+                    t33 = time.time()
                     for colom in range(len(row)):
                         if row[colom] == True:
                             self.connectNodes(key, pIndex, colom)
-                elapsed = time.time() - t__
-                print("time passed for row #" ,cRow, ": ",elapsed)
+                            
+                    elapsed = time.time() - t33
+                    print("time passed for colomn run #" ,cRow, ": ",elapsed)
+                    """
+                    indexses = np.where(row)[0]
+                    self.connectNodes(key, pIndex, indexses)
+                    
+                #elapsed = time.time() - t__
+                #print("time passed for row #" ,cRow, ": ",elapsed)
 
-            elapsed = time.time() - t
-            print("time passed for key" ,key, ": ",elapsed)
+            #elapsed = time.time() - t
+            #print("time passed for key" ,key, ": ",elapsed)
 
     
-        print("iterations = ",cnt)
+        #print("iterations = ",cnt)
  
                         
             
