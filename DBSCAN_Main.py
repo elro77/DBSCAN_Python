@@ -4,7 +4,7 @@ import math
 
 from sklearn.cluster import DBSCAN
 from MyDBSCAN import CMyDBSCAN
-from silhouette import calculateSilhouetteValue
+from silhouette import Silhouette
 
 
 """
@@ -68,18 +68,7 @@ print(elapsed)
     for 50,000 points -> optimal clustering 32.14 seconds
                          My clustering 90.86 time seconds 
                          
-                         
-                         
-    == Version 1.04, decreasing number pf iterations using group union                               
-    for 5000 points -> optimal clustering 0.605 seconds
-                      My clustering 0.93 seconds
-                      
-    for 10,000 points -> optimal clustering 2.72 seconds
-                         My clustering 3.57 seconds
-    for 50,000 points -> optimal clustering 32.14 seconds
-                         My clustering 90.86 time seconds 
-                         
-                         
+                                            
      == Version 1.05, improving search by using a matrix and np.sum() for detecting 
                       how many points are connected to each other with eps distance
     for 5000 points -> optimal clustering 0.605 seconds
@@ -128,6 +117,11 @@ dbscan = CMyDBSCAN(len(testArray), 3, 2)
 myClusteringResult = dbscan.startClustering(testArray)
 elapsed = time.time() - t
 print("my clustering time: ",elapsed)
+
+silhouette = Silhouette()
+
+silhouetteValue = silhouette.calculateSilhouetteValue(testArray, np.array(myClusteringResult))
+
 
 #=================================
 
