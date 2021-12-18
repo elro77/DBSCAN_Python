@@ -46,10 +46,8 @@ class CMyDBSCAN:
             self.currnetCluster += 1 
             self.clusters[pIndex] = self.currnetCluster
             self.undefinedPoints[pIndex] = False
-            neighbors.remove(pIndex)
             seedSet = neighbors[:]
             for qIndex in seedSet:
-                seedSet.remove(qIndex) #removing the index inorder to not call it again
                 if self.noisePoints[qIndex] == True:
                     self.noisePoints[qIndex] = False
                     self.clusters[qIndex] = self.currnetCluster
@@ -60,7 +58,6 @@ class CMyDBSCAN:
                 qNeighbors = self.rangeQuery(dataSet, qIndex)
                 if len(qNeighbors) >= self.minPoints:
                     seedSet.extend(qNeighbors)
-                    seedSet.remove(qIndex) #removing a neighbor which was already called
         return self.clusters
     
     def rangeQuery(self,data, qIndex):

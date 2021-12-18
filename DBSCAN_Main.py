@@ -96,7 +96,7 @@ print("creating data time: ",elapsed)
 
 
 
-testArray = vectorsArray[0:10000]
+testArray = vectorsArray[0:100000]
 #====== Sklearn =================
 #the sklearn clustering takes 120 seconds to accomplish
 #return an array where each index is the vector(point) and value is it clustering
@@ -120,18 +120,21 @@ print("my clustering time: ",elapsed)
 
 silhouette = Silhouette()
 
+t = time.time()
 silhouetteValue = silhouette.calculateSilhouetteValue(testArray, np.array(myClusteringResult))
+elapsed = time.time() - t
+print("calculateSilhouetteValue time: ",elapsed)
 
 
 #=================================
 
-"""
+
 #check correctness
 for i in range(len(labels)):
     if labels[i] != myClusteringResult[i]:
         print("different at: ",i)
 print("finish testing")
-"""
+
 
 #testing area
 
