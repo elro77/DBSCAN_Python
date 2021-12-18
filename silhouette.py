@@ -34,6 +34,8 @@ class Silhouette:
         self.createclustersDictionaryIndexes(dataset, clusters)
         #elapsed = time.time() - t
         #print("createclustersDictionaryIndexes time: ",elapsed)
+        if(len(self.listVectorsForDistanceMatrix) == 0):
+            return -1
         self.distances = dist(np.array(self.listVectorsForDistanceMatrix))
         
         for cluster in self.clustersDictionaryIndexes:
@@ -129,25 +131,6 @@ class Silhouette:
                     arrayBValues[arrayIndex] = bValue
         return arrayBValues
                 
-                
-                
-                
-        
-        
-            
-        
-            
-        
-        
-        
-        
-        
-        
-        
-    def calcSumOfDistance(self, clusterNumber, pIndex):
-        x=0
-
-    
 
 
 def dist(A):
