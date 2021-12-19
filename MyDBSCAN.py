@@ -67,7 +67,7 @@ class CMyDBSCAN:
             if (qIndex == pIndex) or (self.calcEuclideanDistance(data, qIndex, pIndex) <= self.eps):
                 neighborsList.append(pIndex)   
         """
-        return list(self.connectionsDictionary[qIndex])
+        return self.connectionsDictionary[qIndex]
     
     
 
@@ -149,47 +149,61 @@ class CMyDBSCAN:
             #cnt+=1
             #print("#",cnt)
             #t = time.time()
+            t = time.time()
             result = self.dist(np.array(self.gridDictionaryVectors[key]))
             #elapsed = time.time() - t
             #print("dist calc : ",elapsed)
             
-            t = time.time()
+            #t = time.time()
+            #mat is the valid connections
             mat = result < self.eps
+            
+            arrayOfTrueAmounts = np.sum(mat,axis=1)
+            arrayCheck = arrayOfTrueAmounts >= self.minPoints
+            arrayValid = np.where(arrayCheck)[0]
+            
             pIndex = -1
-            for row in mat:
+            for row in arrayValid:
+                #t__ = time.time()
                 pIndex += 1
                 trueAmounts = np.sum(row)
                 if trueAmounts >= self.minPoints:
+                    #try to modify here
+                    """
+                    t33 = time.time()
                     for colom in range(len(row)):
                         if row[colom] == True:
                             self.connectNodes(key, pIndex, colom)
+                            
+                    elapsed = time.time() - t33
+                    print("time passed for colomn run #" ,cRow, ": ",elapsed)
+                    """
+                    #indexses = np.where(row)[0]
+                    #self.connectNodes(key, pIndex, indexses)
                     
-            #elapsed = time.time() - t
-            #print("time passed for key" ,key, ": ",elapsed)
-
-    
-        #print("iterations = ",cnt)
- 
-                        
-            
-     
-
-
-"""
-t = time.time()
-elapsed = time.time() - t
-print("creating graph time: ",elapsed)
-"""
-                       
-
-"""                          
-if (p in self.connectionsDictionary) == False:
-                            self.connectionsDictionary.update({p : [p]})
-                        if (q in self.connectionsDictionary) == False:
-                            self.connectionsDictionary.update({q : [q]})        
-                        self.connectionsDictionary[p].append(q)
-                        self.connectionsDictionary[q].append(p)
-"""
+                    #save this list as connections
+                    indexses = np.where(mat[row])[0]
+                
+                
+                    #elapsed = time.time() - t__
+                    #print("time passed for row #" ,cRow, ": ",elapsed)
+                    #print("time passed for np where #" ,row, ": ",elapsed)
+                    #t__ = time.time()
+                    #self.connectNodes(key, row, indexses) 
+                    realPIndex = self.gridDictionaryIndexes[key][pIndex]
+                    listIndexes = []
+                    listIndexes = [self.gridDictionaryIndexes[key][qIndex] for qIndex in indexses]
+                    listIndexes.append(realPIndex)
+                    if (realPIndex in self.connectionsDictionary) == False:
+                        self.connectionsDictionary.update({realPIndex : []})
+                        self.connectionsDictionary[realPIndex] += listIndexes
+                
+                
+                #elapsed = time.time() - t__
+                #print("time passed for insertion #" ,row, ": ",elapsed)
+                
+            elapsed = time.time() - t
+            print("time passed for key" ,key, ": ",elapsed)
                      
                 
         

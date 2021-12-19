@@ -102,18 +102,20 @@ testArray = vectorsArray[0:100000]
 #return an array where each index is the vector(point) and value is it clustering
 #where -1 will represnt as a noise
 
+"""
 t = time.time()
 clustering = DBSCAN(eps=3, min_samples=2).fit(testArray)
 labels = clustering.labels_
 elapsed = time.time() - t
 print("optimal clustering time: ",elapsed)
 
+"""
 #=================================
 
 
 #============ my implementation =============
 t = time.time()
-dbscan = CMyDBSCAN(len(testArray), 3, 2)
+dbscan = CMyDBSCAN(len(testArray), 4, 2)
 myClusteringResult = dbscan.startClustering(testArray)
 elapsed = time.time() - t
 print("my clustering time: ",elapsed)
