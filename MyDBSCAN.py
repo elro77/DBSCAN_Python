@@ -60,13 +60,41 @@ class CMyDBSCAN:
                     seedSet.extend(qNeighbors)
         return self.clusters
     
+    
+    def algoDBSCAN(self, dataSet):
+        for pIndex in dataSet:
+            if(pIndex in self.connectionsDictionary) == False:
+                continue
+            if(self.undefinedPoints[pIndex] == False):
+                continue
+    
+            neighbors = self.rangeQuery(dataSet, pIndex)
+            if len(neighbors) < self.minPoints:
+                self.noisePoints[pIndex] = True
+                self.undefinedPoints[pIndex] = False
+                continue
+            self.currnetCluster += 1 
+            self.clusters[pIndex] = self.currnetCluster
+            self.undefinedPoints[pIndex] = False
+            seedSet = neighbors[:]
+            for qIndex in seedSet:
+                if self.noisePoints[qIndex] == True:
+                    self.noisePoints[qIndex] = False
+                    self.clusters[qIndex] = self.currnetCluster
+                if self.undefinedPoints[qIndex] == False:
+                    continue
+                self.clusters[qIndex] = self.currnetCluster
+                self.undefinedPoints[qIndex] = False
+                qNeighbors = self.rangeQuery(dataSet, qIndex)
+                if len(qNeighbors) >= self.minPoints:
+                    seedSet.extend(qNeighbors)
+        return self.clusters
+    
+    
+    
     def rangeQuery(self,data, qIndex):
-        """
-        neighborsList = []
-        for pIndex in range(len(data)):
-            if (qIndex == pIndex) or (self.calcEuclideanDistance(data, qIndex, pIndex) <= self.eps):
-                neighborsList.append(pIndex)   
-        """
+        if(qIndex in self.connectionsDictionary) == False:
+            return [qIndex]
         return self.connectionsDictionary[qIndex]
     
     
@@ -156,7 +184,7 @@ class CMyDBSCAN:
             
             #t = time.time()
             #mat is the valid connections
-            mat = result < self.eps
+            mat = result <= self.eps
             
             arrayOfTrueAmounts = np.sum(mat,axis=1)
             arrayCheck = arrayOfTrueAmounts >= self.minPoints
@@ -168,19 +196,7 @@ class CMyDBSCAN:
                 pIndex += 1
                 trueAmounts = np.sum(row)
                 if trueAmounts >= self.minPoints:
-                    #try to modify here
-                    """
-                    t33 = time.time()
-                    for colom in range(len(row)):
-                        if row[colom] == True:
-                            self.connectNodes(key, pIndex, colom)
-                            
-                    elapsed = time.time() - t33
-                    print("time passed for colomn run #" ,cRow, ": ",elapsed)
-                    """
-                    #indexses = np.where(row)[0]
-                    #self.connectNodes(key, pIndex, indexses)
-                    
+                    #try to modify here                 
                     #save this list as connections
                     indexses = np.where(mat[row])[0]
                 
@@ -201,7 +217,8 @@ class CMyDBSCAN:
                 
                 #elapsed = time.time() - t__
                 #print("time passed for insertion #" ,row, ": ",elapsed)
-                
+            #self.algoDBSCAN(self.gridDictionaryIndexes[key])
+            #self.connectionsDictionary.clear()
             elapsed = time.time() - t
             print("time passed for key" ,key, ": ",elapsed)
                      

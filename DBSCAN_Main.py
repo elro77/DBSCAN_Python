@@ -82,6 +82,13 @@ print(elapsed)
    for 100,000 points -> optimal clustering 120 seconds
                          My clustering 135.77 time seconds 
                          
+    == Version 1.06, after implementing silhouete i had to change eps to 4 and it broke dbscan so i had
+                     to think for another way
+
+    == Version 1.07, using matrixes and np.sum() np.where and running dbscan for each grid tile the results were improved for
+    
+                         
+                         
     
                       
 """
