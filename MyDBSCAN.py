@@ -191,7 +191,7 @@ class CMyDBSCAN:
             arrayValid = np.where(arrayCheck)[0]
             
             pIndex = -1
-            for row in arrayValid:
+            for row in arrayOfTrueAmounts:
                 #t__ = time.time()
                 pIndex += 1
                 trueAmounts = np.sum(row)
