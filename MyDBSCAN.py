@@ -191,10 +191,10 @@ class CMyDBSCAN:
             arrayValid = np.where(arrayCheck)[0]
             
             pIndex = -1
-            for row in arrayOfTrueAmounts:
+            for row in arrayValid:
                 #t__ = time.time()
                 pIndex += 1
-                trueAmounts = np.sum(row)
+                trueAmounts = arrayOfTrueAmounts[row]
                 if trueAmounts >= self.minPoints:
                     #try to modify here                 
                     #save this list as connections
