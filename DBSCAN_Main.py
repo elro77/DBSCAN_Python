@@ -86,7 +86,8 @@ print(elapsed)
     == Version 1.06, after implementing silhouete i had to change eps to 4 and it broke dbscan so i had
                      to think for another way
 
-    == Version 1.07, using matrixes and np.sum() np.where and running dbscan for each grid tile the results were improved for
+    == Version 1.07, using matrixes and np.sum() np.where and running dbscan for each grid tile the results were improved for   
+                    260 seconds for 100000
     
                          
                          
@@ -123,7 +124,7 @@ print("optimal clustering time: ",elapsed)
 
 #============ my implementation =============
 t = time.time()
-dbscan = CMyDBSCAN(len(testArray), 4, 3)
+dbscan = CMyDBSCAN(len(testArray), 4, 2)
 myClusteringResult = dbscan.startClustering(testArray)
 elapsed = time.time() - t
 print("my clustering time: ",elapsed)

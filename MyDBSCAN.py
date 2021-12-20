@@ -32,6 +32,8 @@ class CMyDBSCAN:
         
     def startClustering(self, dataSet):
         self.createGraph(dataSet)
+        
+        
         for pIndex in range(len(dataSet)):
             if(pIndex in self.connectionsDictionary) == False:
                 continue
@@ -60,8 +62,7 @@ class CMyDBSCAN:
                     seedSet.extend(qNeighbors)
         return self.clusters
    
-    
-    
+      
     def rangeQuery(self,data, qIndex):
         if(qIndex in self.connectionsDictionary) == False:
             return [qIndex]
