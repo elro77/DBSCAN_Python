@@ -6,7 +6,8 @@ from sklearn.cluster import DBSCAN
 from MyDBSCAN import CMyDBSCAN
 from silhouette import Silhouette
 
-
+import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 """
 # this is very slow approach, it takes 10 seconds for 100 data
 t = time.time()
@@ -103,7 +104,7 @@ print("creating data time: ",elapsed)
 
 
 
-testArray = vectorsArray[0:100000]
+testArray = vectorsArray[0:2000]
 #====== Sklearn =================
 #the sklearn clustering takes 120 seconds to accomplish
 #return an array where each index is the vector(point) and value is it clustering
@@ -122,7 +123,7 @@ print("optimal clustering time: ",elapsed)
 
 #============ my implementation =============
 t = time.time()
-dbscan = CMyDBSCAN(len(testArray), 4, 2)
+dbscan = CMyDBSCAN(len(testArray), 4, 3)
 myClusteringResult = dbscan.startClustering(testArray)
 elapsed = time.time() - t
 print("my clustering time: ",elapsed)
@@ -138,12 +139,46 @@ print("calculateSilhouetteValue time: ",elapsed)
 #=================================
 
 
+#============ Plot =============
+halfSize = int(len(testArray[0])/2)
+xArray = np.average(testArray[: , 0 : halfSize], axis = 1)
+yArray = np.average(testArray[: , halfSize+1 : len(testArray[0])], axis = 1)
+colorsArray = {0 : mcolors.CSS4_COLORS['black'],
+               1 : mcolors.CSS4_COLORS['darkorange'],
+               2 : mcolors.CSS4_COLORS['lime'],
+               3 : mcolors.CSS4_COLORS['red'],
+               4 : mcolors.CSS4_COLORS['blue'],
+               5 : mcolors.CSS4_COLORS['cyan'],
+               6 : mcolors.CSS4_COLORS['darkviolet'],
+               7 : mcolors.CSS4_COLORS['gold'],
+               8 : mcolors.CSS4_COLORS['coral'],
+               9 : mcolors.CSS4_COLORS['violet'],
+               10 : mcolors.CSS4_COLORS['greenyellow'],
+               11 : mcolors.CSS4_COLORS['dimgray'] 
+            }
+
+clusterColor = [colorsArray[i+1] for i in myClusteringResult]
+
+plt.scatter(xArray, yArray, c = clusterColor)
+plt.title('Silhouette = %1.3f' %silhouetteValue)
+plt.xlabel('X')
+plt.ylabel('Y')
+plt.show()
+
+
+
+
+
+#=================================
+
+
+"""
 #check correctness
 for i in range(len(labels)):
     if labels[i] != myClusteringResult[i]:
         print("different at: ",i)
 print("finish testing")
 
-
+"""
 #testing area
 
