@@ -110,6 +110,7 @@ class Silhouette:
         arrayAValues = self.calculateClusterAValue(clusterNumber)
         arrayBValues = self.calculateBValues(clusterNumber)
         arraySValues =  np.zeros(len(self.clustersDictionaryIndexes[clusterNumber]))
+
         for i in range(len(arraySValues)):
             a = arrayAValues[i]
             b = arrayBValues[i]
@@ -127,56 +128,35 @@ class Silhouette:
         
         return np.average(arraySValues)
         
-    
+    #calculate A value
     def calculateClusterAValue(self, clusterNumber):
         #because all the memeber will have the same distance sum we can calculate it only once
         numberOfMembers = len(self.clustersDictionaryIndexes[clusterNumber])
         sumDist = 0
-        firstIndex = list(self.clustersDictionaryIndexes[clusterNumber])[0]
+        #calculate distances to all members
+        distMatrix = dist(np.array(self.clustersDictionaryVectors[clusterNumber]))
+        #calculate sum of each row
+        arrayOfDistancesSum = np.sum(distMatrix,axis=1)
         
-        for index in self.clustersDictionaryIndexes[clusterNumber]:
-            sumDist += self.distances[firstIndex, index]
-            
-        return sumDist / (numberOfMembers - 1)
+        return arrayOfDistancesSum / (numberOfMembers - 1)
         
         
 
-    
+    #calculate B value
     def calculateBValues(self, clusterNumber):   
-        arrayBValues = np.array([-1] * len(self.clustersDictionaryIndexes[clusterNumber]))
-        arrayIndex = -1
-        for index in self.clustersDictionaryIndexes[clusterNumber]:
-            distSum = 0
-            arrayIndex += 1
-            #search for minimum B value from all the clusters
-            for cluster in self.clustersDictionaryIndexes:
-                if cluster == clusterNumber:
-                    continue
-                for outSideIndex in self.clustersDictionaryIndexes[cluster]:
-                    distSum += self.distances[index, outSideIndex]
-                bValue = distSum / (len( self.clustersDictionaryIndexes[cluster]))
-                #update minimum B value
-                if((arrayBValues[arrayIndex] == -1) or (bValue < arrayBValues[arrayIndex])):
-                    arrayBValues[arrayIndex] = bValue
-        return arrayBValues
+        clusterCJ = self.clusterPairsDictionary[clusterNumber]
+        amountOfCI = len(self.clustersDictionaryIndexes[clusterNumber])
+        amountOfMembersInCJ = len(self.clustersDictionaryVectors[clusterCJ])
+        listOfVectors = self.clustersDictionaryVectors[clusterNumber] + self.clustersDictionaryVectors[clusterCJ]
+        #calculate distances to all members
+        distMatrix = dist(np.array(listOfVectors))
+        #calculate sum of each row without there own members
+        arrayOfDistancesSum = np.sum(distMatrix[0:amountOfCI, amountOfCI:],axis=1)
+                               
+        return arrayOfDistancesSum / amountOfMembersInCJ
+        
                 
                 
-                
-                
-        
-        
-            
-        
-            
-        
-        
-        
-        
-        
-        
-        
-    def calcSumOfDistance(self, clusterNumber, pIndex):
-        x=0
 
     
 
