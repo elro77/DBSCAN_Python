@@ -87,7 +87,7 @@ print(elapsed)
                      to think for another way
 
     == Version 1.07, using matrixes and np.sum() np.where and running dbscan for each grid tile the results were improved for   
-                    260 seconds for 100000
+                    260 seconds for 100,000
     
                          
                          
@@ -129,8 +129,8 @@ myClusteringResult = dbscan.startClustering(testArray)
 elapsed = time.time() - t
 print("my clustering time: ",elapsed)
 
-silhouette = Silhouette()
 
+silhouette = Silhouette()
 t = time.time()
 silhouetteValue = silhouette.calculateSilhouetteValue(testArray, np.array(myClusteringResult))
 elapsed = time.time() - t

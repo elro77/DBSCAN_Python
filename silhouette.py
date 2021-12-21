@@ -24,6 +24,8 @@ class Silhouette:
     def __init__(self):
         self.clustersDictionaryIndexes = dict()
         self.clustersDictionaryVectors = dict()
+        self.clusterGravityPointDictionary = dict()
+        self.clusterPairsDictionary = dict()
         self.listAvgSilhouette = []
         self.listVectorsForDistanceMatrix = []
         self.distances = np.zeros(1)
@@ -32,19 +34,21 @@ class Silhouette:
     def calculateSilhouetteValue(self, dataset, clusters):
         #t = time.time()
         self.createclustersDictionaryIndexes(dataset, clusters)
+        self.createClusterGravityPoint()
+        self.findClusterPairs()
+        
         #elapsed = time.time() - t
         #print("createclustersDictionaryIndexes time: ",elapsed)
         self.distances = dist(np.array(self.listVectorsForDistanceMatrix))
+        
+        
         
         for cluster in self.clustersDictionaryIndexes:
             self.listAvgSilhouette.append(self.calculateAvgSilhoueteOfCluster(cluster))
         arrayValues = np.array(self.listAvgSilhouette)
         return np.average(arrayValues)
          
-        
-        
-    
-    
+          
     def createclustersDictionaryIndexes(self, dataset, clusters):
         #pIndex is the true index of the point in data set
         pIndex = -1
@@ -66,14 +70,48 @@ class Silhouette:
             self.clustersDictionaryIndexes[cluster].append(index)
             index += 1
             
+            
+    def createClusterGravityPoint(self):
+        for key in self.clustersDictionaryVectors:
+            pointsArray = np.array(self.clustersDictionaryVectors[key])
+            #calculate average of all colomns
+            clusterPoint = pointsArray.mean(0) 
+            if(key in self.clusterGravityPointDictionary) == False:
+                self.clusterGravityPointDictionary.update({key : clusterPoint})
+                
+        
+    def findClusterPairs(self):  
+        clusterPoints = []
+        for key in self.clusterGravityPointDictionary:
+            clusterPoints.append( self.clusterGravityPointDictionary[key])
+            
+        clustersDistanceMatrix = dist(np.array(clusterPoints))
+        for row in range(len(clustersDistanceMatrix)):
+            minNumber = 99999
+            minColmn = -1
+            for colomn in range(len(clustersDistanceMatrix[row])):
+                if clustersDistanceMatrix[row, colomn] == 0:
+                    continue
+                if clustersDistanceMatrix[row, colomn] < minNumber:
+                    minNumber = clustersDistanceMatrix[row, colomn]
+                    minColmn = colomn
+            if (row in self.clusterPairsDictionary) == False:
+                self.clusterPairsDictionary.update({row : minColmn })
+                
+                
+         
+            
+        
+            
     
     #Calculate avg S values of the cluster
     def calculateAvgSilhoueteOfCluster(self, clusterNumber):     
         #because the calcualtion is the same for all the cluster member they will all have the same A value
-        a = self.calculateClusterAValue(clusterNumber)
+        arrayAValues = self.calculateClusterAValue(clusterNumber)
         arrayBValues = self.calculateBValues(clusterNumber)
         arraySValues =  np.zeros(len(self.clustersDictionaryIndexes[clusterNumber]))
         for i in range(len(arraySValues)):
+            a = arrayAValues[i]
             b = arrayBValues[i]
             if a < b:
                 arraySValues[i] = 1 - (a / b)
@@ -89,14 +127,7 @@ class Silhouette:
         
         return np.average(arraySValues)
         
-        
-            
-        
-            
-            
-        
-
-        
+    
     def calculateClusterAValue(self, clusterNumber):
         #because all the memeber will have the same distance sum we can calculate it only once
         numberOfMembers = len(self.clustersDictionaryIndexes[clusterNumber])
