@@ -105,7 +105,7 @@ print("creating data time: ",elapsed)
 
 
 
-testArray = vectorsArray[0:20000]
+testArray = vectorsArray[0:100000]
 #====== Sklearn =================
 #the sklearn clustering takes 120 seconds to accomplish
 #return an array where each index is the vector(point) and value is it clustering

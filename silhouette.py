@@ -117,8 +117,15 @@ class Silhouette:
     #Calculate avg S values of the cluster
     def calculateAvgSilhoueteOfCluster(self, clusterNumber):     
         #because the calcualtion is the same for all the cluster member they will all have the same A value
-        arrayAValues = self.calculateClusterAValue(clusterNumber)
+        t = time.time()
+        arrayAValues = self.calculateClusterAValue(clusterNumber)       
+        elapsed = time.time() - t
+        print("calc A value for ",clusterNumber," : ",elapsed)
+        
+        t = time.time()
         arrayBValues = self.calculateBValues(clusterNumber)
+        elapsed = time.time() - t
+        print("calc B value for ",clusterNumber," : ",elapsed)
         arraySValues =  np.zeros(len(self.clustersDictionaryIndexes[clusterNumber]))
 
         for i in range(len(arraySValues)):
@@ -144,7 +151,10 @@ class Silhouette:
         numberOfMembers = len(self.clustersDictionaryIndexes[clusterNumber])
         sumDist = 0
         #calculate distances to all members
+        t = time.time()
         distMatrix = dist(np.array(self.clustersDictionaryVectors[clusterNumber]))
+        elapsed = time.time() - t
+        print("calc distMatrix value for ",clusterNumber," : ",elapsed)
         #calculate sum of each row
         arrayOfDistancesSum = np.sum(distMatrix,axis=1)
         
