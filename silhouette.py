@@ -32,20 +32,30 @@ class Silhouette:
         
         
     def calculateSilhouetteValue(self, dataset, clusters):
-        #t = time.time()
+        t = time.time()
         self.createclustersDictionaryIndexes(dataset, clusters)
+        elapsed = time.time() - t
+        print("createclustersDictionaryIndexes() time: ",elapsed)
+        
+        t = time.time()
         self.createClusterGravityPoint()
+        elapsed = time.time() - t
+        print("createClusterGravityPoint() time: ",elapsed)
+        
+        t = time.time()
         self.findClusterPairs()
+        elapsed = time.time() - t
+        print("findClusterPairs() time: ",elapsed)
+
+
+      
         
-        #elapsed = time.time() - t
-        #print("createclustersDictionaryIndexes time: ",elapsed)
-        self.distances = dist(np.array(self.listVectorsForDistanceMatrix))
-        
-        
-        
+        t = time.time()
         for cluster in self.clustersDictionaryIndexes:
             self.listAvgSilhouette.append(self.calculateAvgSilhoueteOfCluster(cluster))
         arrayValues = np.array(self.listAvgSilhouette)
+        elapsed = time.time() - t
+        print("silhueete total calc  time: ",elapsed)
         return np.average(arrayValues)
          
           
