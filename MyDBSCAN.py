@@ -81,12 +81,12 @@ class CMyDBSCAN:
         t = time.time()
         self.initgridDictionaryVectors(data)
         elapsed = time.time() - t
-        print("createGraph time: ",elapsed)
+        #print("createGraph time: ",elapsed)
         #create a graph of connection with eps distances
         t = time.time()
         self.initGraph(data)
         elapsed = time.time() - t
-        print("initGraph time: ",elapsed)
+        #print("initGraph time: ",elapsed)
         
 
     def zipGrid(self):
@@ -121,17 +121,9 @@ class CMyDBSCAN:
      
                 
     def initGraph(self, data):
-        cnt = 0
         for key in self.actualKeys:
-            #cnt+=1
-            #print("#",cnt)
-            #t = time.time()
             t = time.time()
             result = self.dist(np.array(self.gridDictionaryVectors[key]))
-            #elapsed = time.time() - t
-            #print("dist calc : ",elapsed)
-            
-            #t = time.time()
             #mat is the valid connections
             mat = result <= self.eps
             
@@ -141,7 +133,6 @@ class CMyDBSCAN:
             
             pIndex = -1
             for row in arrayValid:
-                #t__ = time.time()
                 pIndex += 1
                 trueAmounts = arrayOfTrueAmounts[row]
                 if trueAmounts >= self.minPoints:
@@ -149,13 +140,7 @@ class CMyDBSCAN:
                     #save this list as connections
                     indexses = np.where(mat[row])[0]
                 
-                
-                    #elapsed = time.time() - t__
-                    #print("time passed for row #" ,cRow, ": ",elapsed)
-                    #print("time passed for np where #" ,row, ": ",elapsed)
-                    #t__ = time.time()
-                    #self.connectNodes(key, row, indexses) 
-                    realPIndex = self.gridDictionaryIndexes[key][pIndex]
+                    realPIndex = self.gridDictionaryIndexes[key][row]
                     listIndexes = []
                     listIndexes = [self.gridDictionaryIndexes[key][qIndex] for qIndex in indexses]
                     listIndexes.append(realPIndex)
@@ -163,13 +148,7 @@ class CMyDBSCAN:
                         self.connectionsDictionary.update({realPIndex : []})
                         self.connectionsDictionary[realPIndex] += listIndexes
                 
-                
-                #elapsed = time.time() - t__
-                #print("time passed for insertion #" ,row, ": ",elapsed)
-            #self.algoDBSCAN(self.gridDictionaryIndexes[key])
-            #self.connectionsDictionary.clear()
-            elapsed = time.time() - t
-            print("time passed for key" ,key, ": ",elapsed)
+            
                      
                 
         

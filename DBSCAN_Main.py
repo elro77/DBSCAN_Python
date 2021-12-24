@@ -105,21 +105,23 @@ print("creating data time: ",elapsed)
 
 
 
-testArray = vectorsArray[0:100000]
+testArray = vectorsArray[0:5000]
 #====== Sklearn =================
 #the sklearn clustering takes 120 seconds to accomplish
 #return an array where each index is the vector(point) and value is it clustering
 #where -1 will represnt as a noise
 
-"""
+
 t = time.time()
-clustering = DBSCAN(eps=3, min_samples=2).fit(testArray)
+clustering = DBSCAN(eps=4, min_samples=2).fit(testArray)
 labels = clustering.labels_
 elapsed = time.time() - t
 print("optimal clustering time: ",elapsed)
 
-"""
+
 #=================================
+
+
 
 
 #============ my implementation =============
@@ -127,15 +129,27 @@ t = time.time()
 dbscan = CMyDBSCAN(len(testArray), 4, 2)
 myClusteringResult = dbscan.startClustering(testArray)
 elapsed = time.time() - t
-print("my clustering time: ",elapsed)
+#print("my clustering time: ",elapsed)
+"""
+for eps in range(3,6):
+    for minPts in range(2,6):
+    
+        t = time.time()
+        dbscan = CMyDBSCAN(len(testArray), eps, minPts)
+        myClusteringResult = dbscan.startClustering(testArray)
+        elapsed = time.time() - t
+       #print("my clustering time: ",elapsed)
+        
+  
+        silhouette = Silhouette()
+        t = time.time()
+        silhouetteValue = silhouette.calculateSilhouetteValue(testArray, np.array(myClusteringResult))
+        elapsed = time.time() - t
+        #print("calculateSilhouetteValue time: ",elapsed)
+        print("( ",eps,", ",minPts,") : S value = ",silhouetteValue)
+        """
 
-
-silhouette = Silhouette()
-t = time.time()
-silhouetteValue = silhouette.calculateSilhouetteValue(testArray, np.array(myClusteringResult))
-elapsed = time.time() - t
-print("calculateSilhouetteValue time: ",elapsed)
-
+"""
 
 #=================================
 
@@ -169,7 +183,6 @@ plt.show()
 
 
 
-
 #=================================
 
 
@@ -180,6 +193,6 @@ for i in range(len(labels)):
         print("different at: ",i)
 print("finish testing")
 
-"""
+
 #testing area
 
