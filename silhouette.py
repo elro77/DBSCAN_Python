@@ -107,12 +107,7 @@ class Silhouette:
                     minColmn = colomn
             if (row in self.clusterPairsDictionary) == False:
                 self.clusterPairsDictionary.update({row : minColmn })
-                
-                
-         
-            
-        
-            
+                  
     
     #Calculate avg S values of the cluster
     def calculateAvgSilhoueteOfCluster(self, clusterNumber):     
@@ -137,16 +132,13 @@ class Silhouette:
     def calculateClusterAValue(self, clusterNumber):
         #because all the memeber will have the same distance sum we can calculate it only once
         numberOfMembers = len(self.clustersDictionaryIndexes[clusterNumber])
-        sumDist = 0
-        #calculate distances to all members
-        t = time.time()
-        distMatrix = dist(np.array(self.clustersDictionaryVectors[clusterNumber]))
-        elapsed = time.time() - t
-        #print("calc distMatrix value for ",clusterNumber," : ",elapsed)
-        #calculate sum of each row
-        arrayOfDistancesSum = np.sum(distMatrix,axis=1)
+        distancesList = []
+        gravityCI = self.clusterGravityPointDictionary[clusterNumber]
+        for i in range(numberOfMembers):
+            distancesList.append(calcDistA(self.clustersDictionaryVectors[clusterNumber][i], gravityCI, numberOfMembers))
         
-        return arrayOfDistancesSum / (numberOfMembers - 1)
+        
+        return np.array(distancesList)
         
         
 
@@ -154,20 +146,28 @@ class Silhouette:
     def calculateBValues(self, clusterNumber):   
         clusterCJ = self.clusterPairsDictionary[clusterNumber]
         amountOfCI = len(self.clustersDictionaryIndexes[clusterNumber])
-        amountOfMembersInCJ = len(self.clustersDictionaryVectors[clusterCJ])
-        listOfVectors = self.clustersDictionaryVectors[clusterNumber] + self.clustersDictionaryVectors[clusterCJ]
-        #calculate distances to all members
+        #amountOfMembersInCJ = len(self.clustersDictionaryVectors[clusterCJ])
+        
+        #current cluster points and cluster gravity point CJ
+        listOfVectors = self.clustersDictionaryVectors[clusterNumber] + [self.clusterGravityPointDictionary[clusterCJ]]
+        #calculate distances of all current points to the gravity point of the neighbor cluster
         distMatrix = dist(np.array(listOfVectors))
         #calculate sum of each row without there own members
         arrayOfDistancesSum = np.sum(distMatrix[0:amountOfCI, amountOfCI:],axis=1)
                                
-        return arrayOfDistancesSum / amountOfMembersInCJ
+        return arrayOfDistancesSum
         
                 
                 
 
     
-
+def calcDistA(a, ac, size):
+    if size == 1:
+        return 0
+    val = a - ((ac * size - a) / (size - 1))
+    val2 = val * val
+    sumOfAll = np.sum(val2)
+    return (sumOfAll)**0.5
 
 def dist(A):
     m, n = A.shape

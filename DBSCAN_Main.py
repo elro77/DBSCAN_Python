@@ -105,20 +105,20 @@ print("creating data time: ",elapsed)
 
 
 
-testArray = vectorsArray[0:5000]
+testArray = vectorsArray[0:100000]
 #====== Sklearn =================
 #the sklearn clustering takes 120 seconds to accomplish
 #return an array where each index is the vector(point) and value is it clustering
 #where -1 will represnt as a noise
 
-
+"""
 t = time.time()
 clustering = DBSCAN(eps=4, min_samples=2).fit(testArray)
 labels = clustering.labels_
 elapsed = time.time() - t
 print("optimal clustering time: ",elapsed)
 
-
+"""
 #=================================
 
 
@@ -129,7 +129,16 @@ t = time.time()
 dbscan = CMyDBSCAN(len(testArray), 4, 2)
 myClusteringResult = dbscan.startClustering(testArray)
 elapsed = time.time() - t
-#print("my clustering time: ",elapsed)
+print("my clustering time: ",elapsed)
+
+silhouette = Silhouette()
+t = time.time()
+silhouetteValue = silhouette.calculateSilhouetteValue(testArray, np.array(myClusteringResult))
+elapsed = time.time() - t
+print("calculateSilhouetteValue time: ",elapsed)
+
+print("S value = ",silhouetteValue)
+
 """
 for eps in range(3,6):
     for minPts in range(2,6):
