@@ -139,26 +139,6 @@ print("calculateSilhouetteValue time: ",elapsed)
 
 print("S value = ",silhouetteValue)
 
-"""
-for eps in range(3,6):
-    for minPts in range(2,6):
-    
-        t = time.time()
-        dbscan = CMyDBSCAN(len(testArray), eps, minPts)
-        myClusteringResult = dbscan.startClustering(testArray)
-        elapsed = time.time() - t
-       #print("my clustering time: ",elapsed)
-        
-  
-        silhouette = Silhouette()
-        t = time.time()
-        silhouetteValue = silhouette.calculateSilhouetteValue(testArray, np.array(myClusteringResult))
-        elapsed = time.time() - t
-        #print("calculateSilhouetteValue time: ",elapsed)
-        print("( ",eps,", ",minPts,") : S value = ",silhouetteValue)
-        """
-
-"""
 
 #=================================
 
@@ -202,6 +182,6 @@ for i in range(len(labels)):
         print("different at: ",i)
 print("finish testing")
 
-
+"""
 #testing area
 
